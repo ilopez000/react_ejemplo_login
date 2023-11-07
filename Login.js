@@ -1,25 +1,37 @@
-
+// src/Login.js
 
 import React, { useState } from 'react';
+import Recuperacion from './Recuperacion'; // Asegúrate de haber creado este componente.
 
-function Login({ onLogin, onError }) {
+function Login({ onLogin }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
+  const [showRecovery, setShowRecovery] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     if (username === 'usuario' && password === 'contraseña') {
-      onLogin();
+      onLogin(true);
+      setError(false);
     } else {
       setError(true);
-      onError(); // Llamada a la función de error pasada como prop
+      onLogin(false);
     }
   };
 
+  const handleRecovery = () => {
+    setShowRecovery(true);
+  };
+
+  if (showRecovery) {
+    return <Recuperacion />;
+  }
+
   return (
-    <div className="container">
-      <form onSubmit={handleSubmit}>
+    <div className="login-container">
+      <form onSubmit={handleSubmit} className="login-form">
+        <h2>Iniciar sesión</h2>
         {error && <p className="error">Usuario o contraseña incorrectos</p>}
         <div className="form-group">
           <label htmlFor="username">Usuario:</label>
@@ -39,7 +51,10 @@ function Login({ onLogin, onError }) {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button type="submit">Iniciar sesión</button>
+        <button type="submit" className="login-button">Iniciar sesión</button>
+        <button type="button" onClick={handleRecovery} className="recovery-button">
+          ¿Olvidaste tu contraseña?
+        </button>
       </form>
     </div>
   );
